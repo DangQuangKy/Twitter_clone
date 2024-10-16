@@ -8,7 +8,7 @@ function Logout() {
             </div>
             <div className="logout-container-content">
                 <div className="logout-content">
-                    <div className="logout-title">Đang diễn ra ngay bây giờ</div>
+                    <div className="logout-title">Đang diễn ra ngay bây giờ asdsa</div>
                     <div className="logout-subtitle">Tham gia ngay.</div>
                     <button>
                         <div></div>
