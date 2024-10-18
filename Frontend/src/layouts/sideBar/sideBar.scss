@@ -1,0 +1,24 @@
+.sider {
+    z-index: 3;
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    background-color: #fff;
+    max-height: 100%;
+    .top{
+        position: sticky;
+        width: 250px;
+        top: 0;
+        background-color: #fff;
+        .sider-menu{
+            list-style: none;
+            margin-left: 100px;
+            padding: 20px;
+            .sider-menu-logo{
+                width: 35px;
+                height: 35px;
+                margin-bottom: 15px;
+            } 
+        }
+    }
+}

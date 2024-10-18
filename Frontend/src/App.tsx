@@ -1,12 +1,11 @@
-import "./App.css";
-import Logout from "./pages/logout/logout";
+import React from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { PublicRoute } from './routes/publicRoute';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="app">
-      <Logout />
-    </div>
+    <RouterProvider router={PublicRoute} />
   );
-}
+};
 
 export default App;
