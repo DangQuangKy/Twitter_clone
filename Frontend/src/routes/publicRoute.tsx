@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import DefaultLayout from "../layouts/defaultLayout/defaultLayout";
-import HomePage from "../pages/home/homePage";
+import MainComponent from "../layouts/main/main";
+import Login from "../pages/logout/login";
+import Register from "../pages/register/register";
 
 export const PublicRoute = createBrowserRouter([
     {
@@ -8,9 +10,18 @@ export const PublicRoute = createBrowserRouter([
         element: <DefaultLayout />,
         children: [
             {
-                path: "/",
-                element: <HomePage />
+                path: "",
+                element: <MainComponent />
             }
+            
         ]
+    },
+    {
+        path:"/login",
+        element: <Login />
+    }, 
+    {
+        path: "/register",
+        element: <Register />
     }
 ])

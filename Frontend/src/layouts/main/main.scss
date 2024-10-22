@@ -1,0 +1,75 @@
+// main.scss
+
+.post-form {
+    margin-bottom: 20px;
+  
+    form {
+      display: flex;
+      flex-direction: column;
+  
+      .tweet-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: none;
+        margin-bottom: 10px;
+  
+        &:focus {
+          border-color: #007bff;
+          outline: none;
+          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+      }
+  
+      .file-input {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+  
+      .submit-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+  
+  .feed {
+    .post-item {
+      padding: 30px;
+      border-bottom: 1px solid #e0e0e0;
+      &:last-child {
+        border-bottom: none; 
+      }
+      .post-image {
+        margin-right: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+        img {
+          max-width: 100%;
+          border-radius: 8px;
+          margin-bottom: 10px;
+        }
+      }
+  
+      .post-content {
+        flex-grow: 1;
+  
+        h2 {
+          font-size: 1.25rem;
+          color: #333;
+          margin: 0;
+        }
+      }
+    }
+  }

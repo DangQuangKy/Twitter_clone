@@ -10,9 +10,11 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id(); // Tạo cột id
             $table->string('name'); // Tạo cột name
-            $table->string('email')->unique(); // Tạo cột email
+            $table->string('email')->unique();
+            $table->string('avatar')->nullable(); 
             $table->timestamp('email_verified_at')->nullable(); // Cột xác minh email
-            $table->string('password'); // Cột password
+            $table->string('password');// Cột password
+            $table->string('role')->default('user'); 
             $table->rememberToken(); // Cột token nhớ đăng nhập
             $table->timestamps(); // Cột created_at và updated_at
         });
