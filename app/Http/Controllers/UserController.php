@@ -1,68 +1,118 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    // Lấy danh sách tất cả người dùng
-    public function index()
-    {
-        return User::all();
-    }
-
-    // Tạo người dùng mới
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' =>Hash::make($validatedData['password']),
-        ]);
-
-        if(!$user){
-            return response()->json(['error' => 'user not created'], 500);
+   
+    // Dang nhap nguoi dung
+    public function login(Request $request){
+        $user = User::where('email', $request->email)->first();
+        if(!$user || !Hash::check($request->password, $user->password, [])){
+           return response()->json(
+            ['message' => 'Email or password is invalid'], 401); 
         }
 
-        return response()->json($user, 201);
-    }
-
-    // Lấy thông tin người dùng theo ID
-    public function show($id)
+        $token = $user->createToken('authToken')->plainTextToken;
+        return response()->json(
+            [
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+       }
+    // Tạo người dùng mới
+    public function register(Request $request)
     {
-        return User::findOrFail($id);
-    }
-
-    // Cập nhật thông tin người dùng
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        
-        $validatedData = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'sometimes|required|string|min:8',
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'string|in:user,admin', // Kiểm tra giá trị role
         ]);
 
-        $user->update(array_filter($validatedData)); // Chỉ cập nhật các trường có giá trị
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password); // Mã hóa password
+        $user->role = $request->role ?? 'user'; // Gán vai trò mặc định là 'user'
+        $user->save();
 
-        return response()->json($user);
+        return response()->json(['user' => $user], 201);
     }
 
-    // Xóa người dùng
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
+         // Lấy danh sách tất cả người dùng
+         public function user(Request $request){
+            return $request->user();
+        }
 
-        return response()->json(null, 204);
+        public function index(){
+            return User::all();
+        }
+        public function logout(){
+            
+            // xoa token
+            // auth()->user()->currentAccessToken()->delete();
+            DB::table('personal_access_tokens')->where('tokenable_id', auth()->id())->delete();
+
+            return response()->json(['message' => 'Logged out']);
+
+        //     //
+        //     $request->user()->currentAccessToken()->delete();
+
+        //     //
+        //     $user->tokens()->where('id', $tokenId)->delete();
+        // }
     }
+    
+    
+    // Lấy thông tin người dùng theo ID
+    // public function show($id)
+    // {
+    //     return User::findOrFail($id);
+    // }
+
+    // // Cập nhật thông tin người dùng
+    // public function update(Request $request, $id)
+    // {
+    //     // Xác thực dữ liệu
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+    //         'password' => 'nullable|string|min:8',
+    //         'role' => 'nullable|string|in:user,admin',
+    //     ]);
+    
+    //     // Tìm người dùng theo ID
+    //     $user = User::findOrFail($id);
+    
+    //     // Cập nhật thông tin người dùng
+    //     $user->name = $request->name;
+    //     $user->email = $request->email;
+    
+    //     if ($request->filled('password')) {
+    //         $user->password = Hash::make($request->password); // Mã hóa password nếu có
+    //     }
+    
+    //     $user->role = $request->role ?? $user->role; // Giữ nguyên vai trò nếu không có thay đổi
+    //     $user->save();
+    
+    //     // Trả về phản hồi 200 với thông tin người dùng đã cập nhật
+    //     return response()->json(['user' => $user], 201);
+    // }
+    
+
+
+    // // Xóa người dùng
+    // public function destroy($id)
+    // {
+    //     $user = User::findOrFail($id);
+    //     $user->delete();
+
+    //     return response()->json(null, 204);
+    // }
 }

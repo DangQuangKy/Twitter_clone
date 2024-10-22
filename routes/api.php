@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +17,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 // lay danh sach bai viet
 Route::get('/posts', [PostController::class, 'index']);
 // them bai viet
@@ -28,21 +27,24 @@ Route::get('/posts/{id}', [PostController::class, 'show']);
 // cap nhat bai viet
 Route::put('/posts/{id}', [PostController::class, 'update']);
 // xoa bai viet 
-Route::delete('/posts/{id}', [PostController::class, 'destroy']); 
+Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 
 
 // Route api Users
- // Lay danh sach nguoi dung
-Route::get('/users', [UserController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function (){
+    Route::get('/user', [UserController::class, 'user']);
+    Route::get('/logout', [UserController::class, 'logout']);
+});
+Route::post('/login', [UserController::class, 'login']);
+ // Tao nguoi dung
+Route::post('/register', [UserController::class, 'register']);
 
-// Tao nguoi dung
-Route::post('/users', [UserController::class, 'store']);
+// // Lay thong tin nguoi dung theo ID 
+// Route::get('/users/{id}', [UserController::class, 'show']);
 
-// Lay thong tin nguoi dung theo ID 
-Route::get('/users/{id}', [UserController::class, 'show']);
+// // Cap nhat thong tin nguoi dung    
+// Route::put('/users/{id}', [UserController::class, 'update']);
 
-// Cap nhat thong tin nguoi dung    
-Route::put('/users/{id}', [UserController::class, 'update']);
+// // Xoa nguoi dung
+// Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-// Xoa nguoi dung
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
